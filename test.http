@@ -1,0 +1,14 @@
+GET http://localhost:8080/api/v1/tasks
+
+POST http://localhost:8080/api/v1/tasks
+Content-Type: application/json
+
+{
+  "title": "Finish backend project",
+  "description": "Build task API with Spring Boot",
+  "status": "TODO",
+  "priority": "HIGH",
+  "dueDate": "2026-03-20",
+  "createdAt": "2026-03-07T13:30:00",
+  "updatedAt": "2026-03-07T13:30:00"
+}

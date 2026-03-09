@@ -1,6 +1,8 @@
 package com.giwrgos.taskmanagement.task;
 
 import com.giwrgos.taskmanagement.task.dto.CreateTaskRequest;
+import com.giwrgos.taskmanagement.task.dto.TaskResponse;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,12 +18,17 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getAllTasks() {
+    public List<TaskResponse> getAllTasks() {
         return taskService.findAllTasks();
     }
 
+    @GetMapping("/{id}")
+    public TaskResponse getTaskById(@PathVariable Long id) {
+        return taskService.getTaskById(id);
+    }
+
     @PostMapping
-    public Task createTask(@jakarta.validation.Valid @RequestBody CreateTaskRequest request) {
+    public TaskResponse createTask(@Valid @RequestBody CreateTaskRequest request) {
         return taskService.createTask(request);
     }
 }

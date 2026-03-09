@@ -1,6 +1,8 @@
 package com.giwrgos.taskmanagement.task;
 
+import com.giwrgos.taskmanagement.common.exception.ResourceNotFoundException;
 import com.giwrgos.taskmanagement.task.dto.CreateTaskRequest;
+import com.giwrgos.taskmanagement.task.dto.TaskResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,11 +17,14 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public List<Task> findAllTasks() {
-        return taskRepository.findAll();
+    public List<TaskResponse> findAllTasks() {
+        return taskRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
-    public Task createTask(CreateTaskRequest request) {
+    public TaskResponse createTask(CreateTaskRequest request) {
         Task task = new Task();
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
@@ -29,6 +34,25 @@ public class TaskService {
         task.setCreatedAt(LocalDateTime.now());
         task.setUpdatedAt(LocalDateTime.now());
 
-        return taskRepository.save(task);
+        Task savedTask = taskRepository.save(task);
+        return mapToResponse(savedTask);
+    }
+
+    public TaskResponse getTaskById(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+
+        return mapToResponse(task);
+    }
+
+    private TaskResponse mapToResponse(Task task) {
+        return new TaskResponse(
+                task.getId(),
+                task.getTitle(),
+                task.getDescription(),
+                task.getStatus(),
+                task.getPriority(),
+                task.getDueDate()
+        );
     }
 }

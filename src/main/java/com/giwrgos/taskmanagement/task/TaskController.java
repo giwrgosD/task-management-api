@@ -2,10 +2,11 @@ package com.giwrgos.taskmanagement.task;
 
 import com.giwrgos.taskmanagement.task.dto.CreateTaskRequest;
 import com.giwrgos.taskmanagement.task.dto.TaskResponse;
+import com.giwrgos.taskmanagement.task.dto.UpdateTaskRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -18,8 +19,11 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskResponse> getAllTasks() {
-        return taskService.findAllTasks();
+    public Page<TaskResponse> getTasks(
+            @RequestParam(required = false) TaskStatus status,
+            @RequestParam(required = false) TaskPriority priority,
+            Pageable pageable) {
+        return taskService.getTasks(status, priority, pageable);
     }
 
     @GetMapping("/{id}")
@@ -30,5 +34,16 @@ public class TaskController {
     @PostMapping
     public TaskResponse createTask(@Valid @RequestBody CreateTaskRequest request) {
         return taskService.createTask(request);
+    }
+
+    @PutMapping("/{id}")
+    public TaskResponse updateTask(@PathVariable Long id,
+                                   @Valid @RequestBody UpdateTaskRequest request) {
+        return taskService.updateTask(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
     }
 }

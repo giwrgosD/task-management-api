@@ -82,7 +82,7 @@ Configured in application.properties:
 
 ---Project Structure
 
-```text
+
 src/main/java/com/giwrgos/taskmanagement
 ├── auth
 ├── common

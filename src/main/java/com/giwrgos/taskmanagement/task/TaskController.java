@@ -7,6 +7,9 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import org.springdoc.core.annotations.ParameterObject;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -19,10 +22,16 @@ public class TaskController {
     }
 
     @GetMapping
+    @Parameters({
+            @Parameter(name = "page", description = "Page number (0-based)"),
+            @Parameter(name = "size", description = "Number of items per page"),
+            @Parameter(name = "sort", description = "Sorting field, e.g. title or dueDate")
+    })
     public Page<TaskResponse> getTasks(
             @RequestParam(required = false) TaskStatus status,
             @RequestParam(required = false) TaskPriority priority,
-            Pageable pageable) {
+            @ParameterObject Pageable pageable) {
+
         return taskService.getTasks(status, priority, pageable);
     }
 
